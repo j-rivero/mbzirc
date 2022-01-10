@@ -124,12 +124,14 @@ RUN sudo apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean -qq
 
-RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash && colcon build --merge-install'
+RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash \
+  && colcon build --merge-install' \
+  && rm -fr build/ log/
 RUN /bin/sh -c 'echo ". /opt/ros/galactic/setup.bash" >> ~/.bashrc' \
  && /bin/sh -c 'echo ". ~/mbzirc_ws/install/setup.sh" >> ~/.bashrc'
 
 # Create a directory required by cloudsim
-RUN mkdir -p /tmp/ign
+# RUN mkdir -p /tmp/ign
 # Leave apt-get ready for users
 RUN apt-get update
 

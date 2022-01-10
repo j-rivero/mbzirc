@@ -1,0 +1,44 @@
+name: Release to dockerhub
+on:
+  push:
+    # TODO: enable after testing
+    #    tags:
+    #  - dockerhub_release_*  # Launch dockerhub push on dockerhub_release_* tags
+jobs:
+  build_docker_image:
+    runs-on: ubuntu-latest
+    env:
+      registry: j-rivero/mbzirc
+    strategy:
+      matrix:
+        image_name: ['mbzirc_ign']
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install base dependencies
+        run: |
+          sudo apt update;
+          sudo apt-get install -y docker
+
+      - name: Run build script
+        run: |
+            cd docker
+            bash +xe ./build.bash ${{ matrix.image_name }}
+
+      # TODO: check build.bash it does tag images
+      - name: Tag image
+        run: docker tag ${{ matrix.image_name }}:latest ${{ env.registry }}:${{ matrix.image_name }}_latest
+
+      - name: Login to docker hub
+        uses: actions-hub/docker/login@master
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push to docker
+        uses: actions-hub/docker@master
+        env:
+          TAG: ${{ env.registry }}:${{ matrix.image_name }}_latest
+        with:
+          args: push ${IMAGE_TAG}

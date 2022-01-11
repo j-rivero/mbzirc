@@ -19,26 +19,28 @@ jobs:
       - name: Install docker
         uses: docker-practice/actions-setup-docker@master
 
-      - name: Install base dependencies
-        run: |
-          sudo apt update
-
       - name: Run build script
         run: |
             cd docker
             bash +xe ./build.bash ${{ matrix.image_name }}
 
-      # TODO: check build.bash it does tag images
-      - name: Tag image
-        run: docker tag ${{ matrix.image_name }}:latest ${{ env.registry }}:${{ matrix.image_name }}_latest
+      - name: Tag docker images for latest and dated
+        if: success()
+        run: |
+          docker tag ${{ matrix.image_name }}:latest \
+            ${{ env.registry }}:${{ matrix.image_name }}:latest
+          docker tag ${{ matrix.image_name }}:latest \
+            ${{ env.registry }}:${{ matrix.image_name }}:$(date +'%F_%H%M')
 
       - name: Login to docker hub
+        if: success()
         uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push to docker
+        if: success()
         uses: actions-hub/docker@master
         env:
           TAG: ${{ env.registry }}:${{ matrix.image_name }}_latest

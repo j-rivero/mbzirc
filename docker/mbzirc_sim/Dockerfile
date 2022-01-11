@@ -115,7 +115,7 @@ RUN mkdir -p mbzirc_ws/src \
  && cd mbzirc_ws/src \
  && git config --global http.postBuffer 1048576000 \
  && git clone https://github.com/osrf/mbzirc \
- && [[ -n ${mbzirc_sha_commit} ]] && git checkout ${mbzirc_sha_commit}
+ && [ -n "${mbzirc_sha_commit}" ] && git checkout ${mbzirc_sha_commit}
 
 # clone ros_ign bridge
 RUN cd /home/$USERNAME/mbzirc_ws/src \

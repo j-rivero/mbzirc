@@ -122,8 +122,8 @@ ENV IGNITION_VERSION fortress
 RUN sudo apt-get update \
   && rosdep update \
   && rosdep install -r --from-paths src -i -y --rosdistro galactic \
-  && rm -rf /var/lib/apt/lists/* \
-  && apt-get clean -qq
+  && sudo rm -rf /var/lib/apt/lists/* \
+  && sudo apt-get clean -qq
 
 RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash \
   && colcon build --merge-install' \
@@ -134,7 +134,7 @@ RUN /bin/sh -c 'echo ". /opt/ros/galactic/setup.bash" >> ~/.bashrc' \
 # Create a directory required by cloudsim
 # RUN mkdir -p /tmp/ign
 # Leave apt-get ready for users
-RUN apt-get update
+RUN sudo apt-get update
 
 # Copy entry point script, and set the entrypoint
 # COPY mbzirc_sim/run_sim.bash ./

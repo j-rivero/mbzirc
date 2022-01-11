@@ -21,7 +21,7 @@
 
 if [ $# -eq 0 ]
 then
-    echo "Usage: $0 directory-name"
+    echo "Usage: $0 directory-name [mbzirc_sha_commit]"
     exit 1
 fi
 
@@ -40,7 +40,12 @@ image_plus_tag=$image_name:latest-$(date +%F_%H%M)
 
 shift
 
-docker build --rm -t $image_plus_tag --build-arg user_id=$user_id "$@" -f $DIR/$image_name/Dockerfile .
+docker build --rm \
+  -t "$image_plus_tag" \
+  --build-arg user_id="$user_id"  \
+  --build-arg mbzirc_sha_commit="${2}" \
+  -f "$DIR/$image_name/Dockerfile" . \
+
 docker tag $image_plus_tag $image_name:latest
 
 echo "Built $image_plus_tag and tagged as $image_name:latest"

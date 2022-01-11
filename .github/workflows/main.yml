@@ -24,26 +24,43 @@ jobs:
             cd docker
             bash +xe ./build.bash ${{ matrix.image_name }}
 
+      - name: Create dated version tag
+        id: version_tag
+        run: |
+          echo "::set-output name=name::${{ env.registry }}/${{ matrix.image_name }}:$(date +'%F_%H%M')"
+
       - name: Tag docker images for latest and dated
         if: success()
         run: |
           docker tag ${{ matrix.image_name }}:latest \
             ${{ env.registry }}/${{ matrix.image_name }}:latest
           docker tag ${{ matrix.image_name }}:latest \
-            ${{ env.registry }}/${{ matrix.image_name }}:$(date +'%F_%H%M')
+            ${{ steps.version_tag.outputs.name }}
 
+      # Login leaves the token without encription. Problem is being worked on
+      # at https://github.com/docker/login-action/issues/30. Solution seems to
+      # use the pass store for the secrets
+      # https://docs.docker.com/engine/reference/commandline/login/#credentials-store
       - name: Login to docker hub
         if: success()
-        uses: actions-hub/docker/login@master
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
           # TODO: remove this and use DOCKER instead DOCKERHUB
-          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD}}
+          password: ${{ secrets.DOCKERHUB_PASSWORD}}
 
-      - name: Push to docker
+      - name: Push to docker latest
         if: success()
         uses: actions-hub/docker@master
         env:
-          TAG: ${{ env.registry }}:${{ matrix.image_name }}_latest
+          TAG: ${{ env.registry }}/${{ matrix.image_name }}:latest
+        with:
+          args: push ${IMAGE_TAG}
+
+      - name: Push to docker latest
+        if: success()
+        uses: actions-hub/docker@master
+        env:
+          TAG: ${{ env.registry }}/${{ matrix.image_name }}:latest
         with:
           args: push ${IMAGE_TAG}

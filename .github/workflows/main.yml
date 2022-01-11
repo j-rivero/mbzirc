@@ -37,7 +37,8 @@ jobs:
         uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          # TODO: remove this and use DOCKER instead DOCKERHUB
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD}}
 
       - name: Push to docker
         if: success()

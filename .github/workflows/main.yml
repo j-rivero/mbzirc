@@ -28,9 +28,9 @@ jobs:
         if: success()
         run: |
           docker tag ${{ matrix.image_name }}:latest \
-            ${{ env.registry }}:${{ matrix.image_name }}:latest
+            ${{ env.registry }}/${{ matrix.image_name }}:latest
           docker tag ${{ matrix.image_name }}:latest \
-            ${{ env.registry }}:${{ matrix.image_name }}:$(date +'%F_%H%M')
+            ${{ env.registry }}/${{ matrix.image_name }}:$(date +'%F_%H%M')
 
       - name: Login to docker hub
         if: success()

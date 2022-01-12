@@ -117,7 +117,7 @@ RUN mkdir -p mbzirc_ws/src \
  && git clone ${mbzirc_repo_url} mbzirc \
  && if [ "${mbzirc_sha_commit}" != "" ]; then \
        echo "Using: SHA ${mbzirc_sha_commit}" && \
-       git checkout "${mbzirc_sha_commit}" -C mbzirc; \
+       git --git-dir mbzirc/.git checkout "${mbzirc_sha_commit}"; \
     fi
 
 # clone ros_ign bridge

@@ -21,7 +21,7 @@
 
 if [ $# -eq 0 ]
 then
-    echo "Usage: $0 directory-name [mbzirc_sha_commit]"
+    echo "Usage: $0 directory-name [mbzirc_repo_url] [mbzirc_sha_commit]"
     exit 1
 fi
 
@@ -34,7 +34,8 @@ then
   exit 2
 fi
 
-mbzirc_sha_commit=${2}
+mbzirc_repo_url=${2:-https://github.com/osrf/mbzirc}
+mbzirc_sha_commit=${3}
 user_id=$(id -u)
 image_name=$(basename $1)
 image_plus_tag=$image_name:latest-$(date +%F_%H%M)
@@ -45,6 +46,7 @@ docker build --rm \
   -t "$image_plus_tag" \
   --build-arg user_id="$user_id"  \
   --build-arg mbzirc_sha_commit="${mbzirc_sha_commit}" \
+  --build-arg mbzirc_repo_url="${mbzirc_repo_url}" \
   -f "$DIR/$image_name/Dockerfile" . \
 
 docker tag $image_plus_tag $image_name:latest

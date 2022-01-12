@@ -108,13 +108,13 @@ WORKDIR /home/$USERNAME
 # Handle input ARG mbzirc_sha_commit to build a given ref in the source code of
 # osrf/mbzirc
 ARG mbzirc_sha_commit
-
+ARG mbzirc_repo_url=https://github.com/osrf/mbzirc
 
 # clone mbzirc sim
 RUN mkdir -p mbzirc_ws/src \
  && cd mbzirc_ws/src \
  && git config --global http.postBuffer 1048576000 \
- && git clone https://github.com/osrf/mbzirc \
+ && git clone ${mbzirc_repo_url} mbzirc \
  && if [ "${mbzirc_sha_commit}" != "" ]; then \
        echo "Using: SHA ${mbzirc_sha_commit}" && \
        git checkout "${mbzirc_sha_commit}" -C mbzirc; \

@@ -61,15 +61,11 @@ jobs:
       - name: Push to docker latest
         if: success()
         uses: actions-hub/docker@master
-        env:
-          TAG: ${{ env.registry }}/${{ matrix.image_name }}:latest
         with:
-          args: push ${IMAGE_TAG}
+          args: push ${{ env.registry }}/${{ matrix.image_name }}:latest
 
       - name: Push to docker timestamped version
         if: success()
         uses: actions-hub/docker@master
-        env:
-          TAG: ${{ steps.version_tag.outputs.name }}
         with:
-          args: push ${IMAGE_TAG}
+          args: push ${{ steps.version_tag.outputs.name }}

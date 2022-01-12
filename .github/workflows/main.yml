@@ -63,9 +63,6 @@ jobs:
         if: success()
         uses: actions-hub/docker@master
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          # TODO: remove this and use DOCKER instead DOCKERHUB
-          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD}}
           NAME: ${{ env.registry }}/${{ matrix.image_name }}:latest
         with:
           args: push
@@ -74,8 +71,5 @@ jobs:
         if: success()
         uses: actions-hub/docker@master
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          # TODO: remove this and use DOCKER instead DOCKERHUB
-          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD}}
           NAME: ${{ steps.version_tag.outputs.name }}
           args: push

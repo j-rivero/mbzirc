@@ -58,14 +58,24 @@ jobs:
           # TODO: remove this and use DOCKER instead DOCKERHUB
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD}}
 
+      # TODO: try to merge into just once and use TAG: for latest
       - name: Push to docker latest
         if: success()
         uses: actions-hub/docker@master
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          # TODO: remove this and use DOCKER instead DOCKERHUB
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD}}
+          NAME: ${{ env.registry }}/${{ matrix.image_name }}:latest
         with:
-          args: push ${{ env.registry }}/${{ matrix.image_name }}:latest
+          args: push
 
       - name: Push to docker timestamped version
         if: success()
         uses: actions-hub/docker@master
-        with:
-          args: push ${{ steps.version_tag.outputs.name }}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          # TODO: remove this and use DOCKER instead DOCKERHUB
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD}}
+          NAME: ${{ steps.version_tag.outputs.name }}
+          args: push

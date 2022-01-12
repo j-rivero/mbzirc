@@ -29,7 +29,7 @@ jobs:
       - name: Create dated version tag
         id: version_tag
         run: |
-          echo "::set-output name=name::${{ env.registry }}/${{ matrix.image_name }}:$(date +'%F_%H%M')"
+          echo "::set-output name=name::${{ matrix.image_name }}:$(date +'%F_%H%M')"
 
       - name: Tag docker images for latest and dated
         if: success()
@@ -56,7 +56,8 @@ jobs:
         if: success()
         uses: actions-hub/docker@master
         env:
-          TAG: ${{ env.registry }}/${{ matrix.image_name }}:latest
+          NAME: ${{ env.registry }}
+          TAG: ${{ matrix.image_name }}:latest
         with:
           args: push ${IMAGE_TAG}
 
@@ -64,6 +65,7 @@ jobs:
         if: success()
         uses: actions-hub/docker@master
         env:
+          NAME: ${{ env.registry }}
           TAG: ${{ steps.version_tag.outputs.name }}
         with:
           args: push ${IMAGE_TAG}

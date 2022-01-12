@@ -23,7 +23,7 @@ jobs:
         run: |
             cd docker
             bash -xe ./build.bash ${{ matrix.image_name }} \
-              ${{ github.url }}${{ github.repository }} \
+              ${{ github.server_url }}/${{ github.repository }} \
               ${{ github.sha }}
 
       - name: Create dated version tag

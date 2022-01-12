@@ -22,7 +22,7 @@ jobs:
       - name: Run build script
         run: |
             cd docker
-            bash +xe ./build.bash ${{ matrix.image_name }} ${{ github.sha }}
+            bash -xe ./build.bash ${{ matrix.image_name }} ${{ github.sha }}
 
       - name: Create dated version tag
         id: version_tag

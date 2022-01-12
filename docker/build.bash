@@ -34,6 +34,7 @@ then
   exit 2
 fi
 
+mbzirc_sha_commit=${2}
 user_id=$(id -u)
 image_name=$(basename $1)
 image_plus_tag=$image_name:latest-$(date +%F_%H%M)
@@ -43,7 +44,7 @@ shift
 docker build --rm \
   -t "$image_plus_tag" \
   --build-arg user_id="$user_id"  \
-  --build-arg mbzirc_sha_commit="${2}" \
+  --build-arg mbzirc_sha_commit="${mbzirc_sha_commit}" \
   -f "$DIR/$image_name/Dockerfile" . \
 
 docker tag $image_plus_tag $image_name:latest

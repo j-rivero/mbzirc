@@ -13,6 +13,12 @@ jobs:
       matrix:
         image_name: ['mbzirc_sim']
     steps:
+      - name: Safety check for uploads of forks
+        run: |
+          if [ "${{ env.registry  }}" == "osrf/mbzirc" ] && \
+             [ "${{ github.repository }}" != "osrf/mbzirc" ]; then \
+             exit -1; \
+          fi
       - name: Checkout sources
         uses: actions/checkout@v2
 
@@ -23,7 +29,7 @@ jobs:
         run: |
             cd docker
             bash -xe ./build.bash ${{ matrix.image_name }} \
-              ${{ github.url }}${{ github.repository }} \
+              ${{ github.server_url }}/${{ github.repository }} \
               ${{ github.sha }}
 
       - name: Create dated version tag
@@ -56,16 +62,14 @@ jobs:
         if: success()
         uses: actions-hub/docker@master
         env:
-          NAME: ${{ env.registry }}
-          TAG: ${{ matrix.image_name }}:latest
+          NAME: ${{ matrix.image_name }}
+          TAG: latest
         with:
-          args: push ${IMAGE_TAG}
+          args: push ${{ env.registry }}
 
       - name: Push to docker timestamped version
-        if: success()
         uses: actions-hub/docker@master
         env:
           NAME: ${{ env.registry }}
-          TAG: ${{ steps.version_tag.outputs.name }}
-        with:
-          args: push ${IMAGE_TAG}
+          NAME: ${{ steps.version_tag.outputs.name }}
+          args: push ${{ env.registry }}

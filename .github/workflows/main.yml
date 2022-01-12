@@ -38,16 +38,17 @@ jobs:
             ${{ steps.version_tag.outputs.name }}
 
       # Login leaves the token without encription. Problem is being worked on
+      # a different github action by Docker team: docker/login-action@v1
       # at https://github.com/docker/login-action/issues/30. Solution seems to
       # use the pass store for the secrets
       # https://docs.docker.com/engine/reference/commandline/login/#credentials-store
       - name: Login to docker hub
+        uses: actions-hub/docker/login@master
         if: success()
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           # TODO: remove this and use DOCKER instead DOCKERHUB
-          password: ${{ secrets.DOCKERHUB_PASSWORD}}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD}}
 
       - name: Push to docker latest
         if: success()

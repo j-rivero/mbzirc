@@ -43,13 +43,13 @@ jobs:
       # at https://github.com/docker/login-action/issues/30. Solution seems to
       # use the pass store for the secrets
       # https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+      # TODO: remove this and use DOCKERHUB instead DOCKER
       - name: Login to docker hub
-        uses: actions-hub/docker/login@master
+        uses: docker/login-action@v1
         if: success()
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          # TODO: remove this and use DOCKER instead DOCKERHUB
-          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD}}
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Tag docker images for latest and dated images in dockerhub
         if: success()

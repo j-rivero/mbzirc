@@ -1,8 +1,9 @@
+---
 name: Release to dockerhub
 on:
   push:
-    tags:
-      - dockerhub_release_*  # Launch dockerhub push on dockerhub_release_* tags
+    # tags:
+    #   - dockerhub_release_*  # Launch dockerhub push on dockerhub_release_* tags
 jobs:
   build_docker_image:
     runs-on: ubuntu-latest

@@ -44,7 +44,7 @@ jobs:
       # use the pass store for the secrets
       # https://docs.docker.com/engine/reference/commandline/login/#credentials-store
       - name: Login to docker hub
-        uses: actions-hub/docker/login@master
+        uses: docker/login-action@v1
         if: success()
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -56,5 +56,13 @@ jobs:
         run: |
           # docker tag <imageId or tag> <dockerhub id>/<imagename>:<tag>
           docker tag ${{ matrix.image_name }}:latest \
-            ${{ env.registry }}:mbzirc_sim_debug_empty
-          docker push ${{ env.registry }}:mbzirc_sim_debug_empty
+            ${{ env.registry }}:mbzirc_sim
+          # docker push ${{ env.registry }}:mbzirc_sim_debug_empty
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: docker/mbzirc_sim
+          push: true
+          tags: jlrivero/mbzirc2:mbzirc_sim

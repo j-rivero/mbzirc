@@ -26,21 +26,28 @@ jobs:
         uses: docker-practice/actions-setup-docker@master
 
       - name: Run build script
+        id: build_docker
         run: |
             cd docker
             bash -xe ./build.bash ${{ matrix.image_name }} \
               ${{ github.server_url }}/${{ github.repository }} \
-              ${{ github.sha }}
+              ${{ github.sha }} \
+            echo "::set-output name=name::${{ matrix.image_name }}:latest"
+
+      - name: Create latest version tag
+        id: latest_tag
+        run: |
+          # docker tag <imageId or tag> <dockerhub id>/<imagename>:<tag>
+          echo "::set-output name=name::${{ env.registry }}:${{ matrix.image_name }}_latest"
 
       - name: Create dated version tag
-        id: version_tag
+        id: timestamp_tag
         run: |
           # docker tag <imageId or tag> <dockerhub id>/<imagename>:<tag>
           echo "::set-output name=name::${{ env.registry }}:${{ matrix.image_name }}_$(date +'%F_%H%M')"
 
-      # Login leaves the token without encription. Problem is being worked on
-      # a different github action by Docker team: docker/login-action@v1
-      # at https://github.com/docker/login-action/issues/30. Solution seems to
+      # Login leaves the token without encription. Works are under
+      # https://github.com/docker/login-action/issues/30. Solution seems to
       # use the pass store for the secrets
       # https://docs.docker.com/engine/reference/commandline/login/#credentials-store
       # TODO: remove this and use DOCKERHUB instead DOCKER
@@ -55,17 +62,17 @@ jobs:
         if: success()
         run: |
           # docker tag <imageId or tag> <dockerhub id>/<imagename>:<tag>
-          docker tag ${{ matrix.image_name }}:latest \
-            ${{ env.registry }}:${{ matrix.image_name }}_latest
-          docker tag ${{ matrix.image_name }}:latest \
-            ${{ steps.version_tag.outputs.name }}
+          docker tag ${{ steps.build_docker.outputs.name }} \
+            ${{ steps.latest_tag.outputs.name }}
+          docker tag ${{ steps.build_docker.outputs.name }} \
+            ${{ steps.timestamp_tag.outputs.name }}
 
       - name: Push to docker latest
         if: success()
         run: |
-          docker push ${{ env.registry }}:${{ matrix.image_name }}_latest
+          docker push ${{ steps.latest_tag.outputs.name }}
 
       - name: Push to docker timestamped version
         if: success()
         run: |
-          docker push ${{ steps.version_tag.outputs.name }}
+          docker push ${{ steps.timestamp_tag.outputs.name }}

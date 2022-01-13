@@ -62,6 +62,6 @@ jobs:
         if: ${{ success() }}
         uses: actions-hub/docker@master
         env:
-          TAG: ${{ env.registry }}:${{ matrix.image_name }}_latest
+          TAG: jlrivero/mbzirc2/${{ matrix.image_name }}_latest
         with:
           args: push ${IMAGE_TAG}

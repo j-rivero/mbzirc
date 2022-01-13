@@ -8,7 +8,7 @@ jobs:
   build_docker_image:
     runs-on: ubuntu-latest
     env:
-      registry: jlrivero/mbzirc2
+      registry: jlrivero/mbzirc
     strategy:
       matrix:
         image_name: ['mbzirc_sim']
@@ -56,12 +56,5 @@ jobs:
         run: |
           # docker tag <imageId or tag> <dockerhub id>/<imagename>:<tag>
           docker tag ${{ matrix.image_name }}:latest \
-            ${{ env.registry }}:${{ matrix.image_name }}_latest
-
-      - name: Push to docker
-        if: ${{ success() }}
-        uses: actions-hub/docker@master
-        env:
-          TAG: ${{ env.registry }}:${{ matrix.image_name }}_latest
-        with:
-          args: push ${IMAGE_TAG}
+            ${{ env.registry }}:mbzirc_sim_debug_empty
+          docker push ${{ env.registry }}:mbzirc_sim_debug_empty

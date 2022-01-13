@@ -56,13 +56,13 @@ jobs:
           # docker tag <imageId or tag> <dockerhub id>/<imagename>:<tag>
           docker tag ${{ matrix.image_name }}:latest \
             ${{ env.registry }}:${{ matrix.image_name }}_latest
-          docker tag ${{ matrix.image_name }}:latest \
-            ${{ steps.version_tag.outputs.name }}
 
       - name: Push to docker timestamped version
         if: success()
         run: |
-          docker push ${{ steps.version_tag.outputs.name }}
+         docker tag ${{ matrix.image_name }}:latest \
+           ${{ steps.version_tag.outputs.name }}
+         docker push ${{ steps.version_tag.outputs.name }}
       - name: Push to docker latest
         if: success()
         run: |

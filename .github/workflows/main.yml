@@ -57,12 +57,4 @@ jobs:
           # docker tag <imageId or tag> <dockerhub id>/<imagename>:<tag>
           docker tag ${{ matrix.image_name }}:latest \
             ${{ env.registry }}:mbzirc_sim
-          # docker push ${{ env.registry }}:mbzirc_sim_debug_empty
-
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: docker/mbzirc_sim
-          push: true
-          tags: jlrivero/mbzirc2:mbzirc_sim
+          docker push jlrivero/mbzirc2:mbzirc_sim

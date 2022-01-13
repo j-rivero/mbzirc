@@ -8,7 +8,7 @@ jobs:
   build_docker_image:
     runs-on: ubuntu-latest
     env:
-      registry: jlrivero/mbzirc
+      registry: jlrivero/mbzirc2
     strategy:
       matrix:
         image_name: ['mbzirc_sim']

@@ -8,7 +8,7 @@ jobs:
   build_docker_image:
     runs-on: ubuntu-latest
     env:
-      registry: osrf/mbzirc
+      registry: jlrivero/mbzirc2
     strategy:
       matrix:
         image_name: ['mbzirc_sim']
@@ -29,9 +29,7 @@ jobs:
         id: build_docker
         run: |
             cd docker
-            bash -xe ./build.bash ${{ matrix.image_name }} \
-              ${{ github.server_url }}/${{ github.repository }} \
-              ${{ github.sha }}
+            bash -xe ./build.bash ${{ matrix.image_name }}
             echo "::set-output name=name::${{ matrix.image_name }}:latest"
 
       - name: Create latest version tag

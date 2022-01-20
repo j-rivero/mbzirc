@@ -105,6 +105,10 @@ RUN mkdir ~/workspaces ~/other
 # When running a container start in the developer's home folder
 WORKDIR /home/$USERNAME
 
+# clone mbzirc sim
+RUN mkdir -p mbzirc_ws/src \
+ && cd mbzirc_ws/src
+
 # clone ros_ign bridge
 RUN cd /home/$USERNAME/mbzirc_ws/src \
  && git clone https://github.com/osrf/ros_ign.git -b ros2
@@ -124,14 +128,6 @@ RUN sudo apt-get update \
 RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash \
   && colcon build --merge-install' \
   && rm -fr build/ log/
+
 RUN /bin/sh -c 'echo ". /opt/ros/galactic/setup.bash" >> ~/.bashrc' \
  && /bin/sh -c 'echo ". ~/mbzirc_ws/install/setup.sh" >> ~/.bashrc'
-
-# Create a directory required by cloudsim
-# RUN mkdir -p /tmp/ign
-# Leave apt-get ready for users
-RUN sudo apt-get update
-
-# Copy entry point script, and set the entrypoint
-# COPY mbzirc_sim/run_sim.bash ./
-# ENTRYPOINT ["./run_sim.bash"]

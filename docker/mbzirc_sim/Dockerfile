@@ -131,3 +131,7 @@ RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash \
 
 RUN /bin/sh -c 'echo ". /opt/ros/galactic/setup.bash" >> ~/.bashrc' \
  && /bin/sh -c 'echo ". ~/mbzirc_ws/install/setup.sh" >> ~/.bashrc'
+
+# Copy entry point script, and set the entrypoint
+# COPY mbzirc_sim/run_sim.bash ./
+# ENTRYPOINT ["./run_sim.bash"]

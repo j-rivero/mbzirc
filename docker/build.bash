@@ -34,6 +34,12 @@ then
   exit 2
 fi
 
+if [ ! -d mbzirc_ros ]; then
+  echo "mbzirc_ros directory not found in this directory. Please call the"
+  echo "script from the root directory of the mbzirc code."
+  exit 3
+fi
+
 user_id=$(id -u)
 image_name=$(basename $1)
 image_plus_tag=$image_name:latest-$(date +%F_%H%M)

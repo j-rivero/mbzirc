@@ -125,7 +125,9 @@ RUN sudo apt-get update \
   && sudo rm -rf /var/lib/apt/lists/* \
   && sudo apt-get clean -qq
 
+# Be sure that mbzirc_ros is present in the compilation by calling info
 RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash \
+  && colcon info mbzirc_ros \
   && colcon build --merge-install' \
   && rm -fr build/ log/
 
